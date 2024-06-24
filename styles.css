@@ -1,0 +1,40 @@
+@import url('https://fonts.googleapis.com/css2?family=Sono:wght,MONO@200..800,0..1&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,100..900;1,9..144,100..900&display=swap');
+
+body { margin: 0; font-family: Fraunces; line-height: 1.75; font-size: min(14px, calc(1.1vw + 3.5px)); font-weight: 350; color: #000; font-variation-settings: "MONO" 0; text-size-adjust: none;}
+b { color: #444444; font-weight: 500; }
+a { color: #70c96aff; text-decoration: none; }
+a:hover { color: #70c96acc; text-decoration: underline; }
+nav li:hover a { color: #70c96acc; }
+pre { font-family: Sono; background-color: #331033; color: #cb8; border-top: solid 1px black; border-bottom: solid 1px black; font-size: 0.9rem; font-variation-settings: "MONO" 1; padding: 0.8em 1em; margin: 1em -1em; border-radius: 0.4em; line-height: 1.3em; overflow-x: auto; }
+p { text-align: justify; padding-left: 200px; }
+p img { width: 16em; float: right; margin: 0 -1em 0 1em; shape-outside: circle(); }
+h1 { color: #111; font-size: 2.5em; line-height: 1; font-weight: 300; padding-left: 200px; }
+h2 { color: #0094e3; font-size: 1.6em; font-weight: 300; margin: 0; padding-left: 200px; }
+h3 { color: #0094e3; font-size: 1.4em; font-weight: 300; margin: 0; line-height: 1.25; padding-left: 200px; }
+h4 { color: #0094e3; font-size: 1.2em; font-weight: 300; margin: 0; padding-left: 200px; }
+.date { font-size: 0.5em; font-weight: 450; }
+.intro { font-size: 1.5em; line-height: 1.25; text-align: center; font-weight: 300; }
+.highlight { color: #70c96aff; }
+code { font-family: Sono; font-variation-settings: "MONO" 0; padding: 0 0.1em; }
+nav { font-family: Fraunces; padding: 0 0 0 0; right: 0; background-image: url('images/logo.svg'); background-repeat: no-repeat; background-size: 17.5rem; background-position: calc(50vw - min(800px, 90vw)/2) 10px; height: 5rem; }
+nav ul { padding: 0; text-align: right; margin: 0.7rem calc(50vw - min(800px, 90vw)/2) 0.5rem 0; }
+nav li { display: inline-block; margin: 0.2rem 0 0 1rem; border-bottom: solid 1px transparent; transition: ease-in-out 0.1s all; }
+nav li:hover { border-bottom: solid 0.1rem #70c96a; }
+nav li a { line-height; 2; text-decoration: none !important; color: inherit; transition: ease-in-out 0.1s all; }
+section { border: solid 0.04rem #70c96aff; background-color: #70c96a22; border-left: none; border-right: none; padding: 0 1.4rem; margin: 2em 0; }
+main { width: min(800px, 90vw); margin: 0 auto 0; padding: 0 0 3em 0; border-bottom: solid 1px silver; }
+main li { padding-left: 1em; }
+
+@media (max-device-width: 480px) {
+  body { text-size-adjust: 133%; }
+  nav { height: 12.5em; background-size: 80vw; background-position-y: 2em; }
+}
+
+@media (refers-color-scheme: dark) {
+  body { background-color: #001; color: #cccccc; }
+  h1 { color: #eee; }
+  nav { background-image: url('images/logo.svg'); }
+  .intro { color: #ccc; }
+  b { color: #fff; }
+}

@@ -1,0 +1,35 @@
+<!doctype html>
+<html>
+    <head>
+        <title>Invariant.blog</title>
+        <meta charset="utf-8" />
+        <link rel="stylesheet" href="styles.css" />
+        <link rel="icon" type="image/x-icon" href="/images/logo.svg" />
+    </head>
+    <body>
+        <nav>
+            <ul>
+                <li>
+                    <a href="/">HOME</a>
+                </li>
+                <li>
+                    <a href="/about">ABOUT</a>
+                </li>
+            </ul>
+        </nav>
+        <main>
+          <h1>Characteristica Universalis</h1>
+
+<p>Polymorphism and generic programming make it possible to write <em>reusable code</em>.
+We can write classes and methods parameterized with types, and their behavior
+at each call-site can be dependent on the choice of compiletime type
+parameters. That is to say, the compiler will produce different bytecode,
+taking different code paths, for different invocations.</p>
+
+<p>For example, in Soundness, <code>List[Text]</code> and a <code>List[Teletype]</code> both represent
+lists of textual elements. The return type of the <code>head</code> method of either of
+these lists will be dependent on their type parameter.</p>
+
+        </main>
+    </body>
+</html>
