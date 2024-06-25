@@ -26,7 +26,7 @@ nav li:hover { border-bottom: solid 0.1rem #a6013a; }
 nav li a { line-height; 2; text-decoration: none !important; color: inherit; transition: ease-in-out 0.1s all; }
 main, footer, header { width: min(800px, 90vw); margin: 0 auto 0; padding: 0 0 1em 0; }
 main li { padding-left: 1em; }
-header img { width: 80%; margin: 1em auto 1em 25%; }
+header img { width: 110%; margin-top: -1em; }
 footer img { width: 110%; margin-top: 3em; }
 
 @media (max-device-width: 480px) {
