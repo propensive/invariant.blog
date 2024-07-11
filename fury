@@ -15,3 +15,4 @@ project invariant
     sources   src/web
     include   scintillate/server scintillate/servlet honeycomb/core cataclysm/core eucalyptus/ansi hellenism/core punctuation/html harlequin/md
     main      blog.invariant.server
+    artifact  invariant-blog.war    

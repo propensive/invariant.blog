@@ -1,26 +1,19 @@
 package blog.invariant
 
-import anticipation.*
-import contingency.*
-import digression.*
+import scala.collection.mutable.HashMap
+
+import soundness.*
 import escapade.*
 import eucalyptus.*
-import fulminate.*
 import gesticulate.*
 import gossamer.*
-import harlequin.*
 import hellenism.*
-import hieroglyph.*
 import honeycomb.*
-import nettlesome.*
 import parasite.*
 import punctuation.*
-import rudiments.*
 import scintillate.*
 import serpentine.*
 import spectacular.*
-import turbulence.*
-import vacuous.*
 
 import logFormats.ansiStandard
 import classloaders.scala
@@ -29,9 +22,10 @@ import charDecoders.utf8
 import encodingMitigation.skip
 import asyncOptions.cancelOrphans
 import threadModels.platform
-import hierarchies.simple
+import serpentine.hierarchies.simple
 import stdioSources.virtualMachine.ansi
-import htmlRendering.scalaSyntax
+import htmlRenderers.scalaSyntax
+
 
 given Realm = realm"invariant"
 given Message is Loggable = safely(supervise(Log(Out))).or(Log.silent)
@@ -42,7 +36,12 @@ given AppError is Fatal = error =>
 
 case class AppError(detail: Message) extends Error(detail)
 
-def page(menu: Html[Flow], content: Html[Flow]*): HtmlDoc =
+def menu = Map
+ (t"Home" -> % / p"",
+  t"About" -> % / p"about",
+  t"Contact" -> % / p"contact")
+
+def page(side: Seq[Html[Flow]], content: Html[Flow]*): HtmlDoc =
   HtmlDoc(Html
    (Head
      (Title(t"Invariant.blog"),
@@ -50,13 +49,9 @@ def page(menu: Html[Flow], content: Html[Flow]*): HtmlDoc =
       Link(rel = Rel.Stylesheet, href = % / p"styles.css"),
       Link(rel = Rel.Icon, href = % / p"images" / p"logo.svg")),
     Body
-     (Nav(Ul
-       (Li(A(href = %)(t"Home")),
-        Li(A(href = % / p"about")(t"About")),
-        Li(A(href = % / p"contact")(t"Contact")))),
+     (Nav(Ul(menu.map { (label, link) => Li(A(href = link)(label)) }.to(List))),
       Header(Img(src = % / p"images" / p"panorama2.webp")),
-      Main
-       (menu, Article(content*)),
+      Main(Aside(side), Article(content*)),
       Footer
        (Img(src = % / p"images" / p"panorama.webp"),
         P(t"© Copyright 2024 Jon Pretty & Propensive")))))
@@ -67,33 +62,52 @@ def server(): Unit =
     case ConcurrencyError(reason) =>
       Out.println(m"There was a concurrency error")
       ExitStatus.Fail(2).terminate()
+
     case AppError(message) =>
       Out.println(message)
       ExitStatus.Fail(1).terminate()
+
   .within:
     supervise(tcp"8080".serve[Http](handle))
 
-object Service extends Servlet(handle)
+class Service() extends Servlet(handle)
+
+def notFound(path: Text): HtmlDoc = page
+ (Nil,
+  H1(t"Not Found"),
+  P(t"There is no page at the url ", Code(path), t"."))
+def about: HtmlDoc = page(Nil, H1(t"About"), P(t"Invariant.blog is a blog about invariance."))
+
+def contact: HtmlDoc =
+  page(Nil, H1(t"Contact Me"), P(t"To get in touch, please email me at jon.pretty@propensive.com"))
+
+object Cache:
+  private val cache: HashMap[Text, HtmlDoc] = HashMap()
+
+  def apply(post: Text): HtmlDoc raises PathError raises ClasspathError raises MarkdownError =
+    cache.establish(post):
+      val markdown = Markdown.parse((Classpath / p"posts" / Name(t"$post.md"))())
+
+      page
+       (List(Div(htmlRenderers.outline.convert(markdown.nodes) :+ Span.fleuron(t"☙"))),
+        (Address(t"Jon Pretty,", Time(t"11 July 2024")) :: (markdown.html.to(List) :+ P.fleuron(t"❦")))*)
 
 def handle(using HttpRequest): HttpResponse[?] =
   quash:
     case MarkdownError(detail) =>
-      HttpResponse(page(Aside, H1(t"Bad markdown")))
+      HttpResponse(page(Nil, H1(t"Bad markdown: $detail")))
+
     case ClasspathError(path) =>
-      HttpResponse(page(Aside, H1(t"Path $path not found")))
+      HttpResponse(page(Nil, H1(t"Path $path not found")))
+
     case PathError(path, reason) =>
-      HttpResponse(page(Aside, P(t"The path $path is not valid because $reason")))
+      HttpResponse(page(Nil, P(t"$path is not valid because $reason")))
+
   .within:
     request.path match
-      case % / p"images" / image =>
-        HttpResponse(Classpath / p"images" / Name(image.render))
-
-      case % / p"styles.css" =>
-        HttpResponse(Classpath / p"styles.css")
-
-      case % / Name(post) =>
-        val markdown = Markdown.parse((Classpath / p"posts" / Name(t"$post.md"))())
-        HttpResponse(page(Aside, markdown.html*))
-
-      case _ =>
-        HttpResponse(page(Div, H1(t"Not found"), P(t"This page does not exist.")))
+      case % / p"about"                => HttpResponse(about)
+      case % / p"contact"              => HttpResponse(contact)
+      case % / p"images" / Name(image) => HttpResponse(Classpath / p"images" / Name(image))
+      case % / p"styles.css"           => HttpResponse(Classpath / p"styles.css")
+      case % / Name(post)              => HttpResponse(Cache(post))
+      case _                           => HttpResponse(notFound(request.pathText))

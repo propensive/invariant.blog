@@ -1,0 +1,71 @@
+@import url("https://fonts.googleapis.com/css2?family=Sono:wght,MONO@200..800,0..1&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,100..900;1,9..144,100..900&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Trispace:wght@100..800&display=swap");
+
+* { transition: margin ease-in-out 0.4s, padding ease-in-out 0.4s; }
+html { scroll-behavior: smooth; }
+body { margin: 0; font-family: Fraunces; line-height: 1.75; font-size: min(14px, calc(0.8vw + 6px)); font-weight: 350; color: #000; font-variation-settings: "MONO" 0; text-size-adjust: none; }
+b { color: #444444; font-weight: 500; }
+a { color: #a6013a; text-decoration: none; }
+a:hover { color: #de5826; text-decoration: underline; }
+nav li:hover a { color: #a6013a; }
+pre { background-color: #212; color: #cb8; border-top: solid 1px black; border-bottom: solid 1px black; font-variation-settings: "MONO" 1; padding: 0.8em 1em; margin: 1em -1em 1em calc(30% - 1em); border-radius: 0.4em; line-height: 1.3em; overflow-x: auto; font-size: inherit; }
+p, h1, h2, h3, h4 { padding-left: 30%; }
+p { text-align: justify; }
+p img { width: 16em; float: right; margin: 0 -1em 0 1em; shape-outside: circle(); }
+h1 { font-size: 1.8em; line-height: 1; font-weight: 300; }
+h2 {font-size: 1.5em; font-weight: 300; margin: 0; }
+h3 { font-size: 1.35em; font-weight: 300; margin: 0; line-height: 1.25; }
+h4 { font-size: 1.2em; font-weight: 300; margin: 0; }
+.date { font-size: 0.5em; font-weight: 450; }
+.intro { font-size: 1.5em; line-height: 1.25; text-align: center; font-weight: 300; }
+.fleuron { font-size: 3.2em; }
+.highlight { color: #70c96aff; }
+p code { font-family: Trispace; letter-spacing: -0.05em; padding: 0 0.1em; font-weight: 400; font-size: 0.92em; border-bottom: solid 1px #cceeff; background-color: #cceeff40; padding-bottom: 0.1em; }
+pre code { font-family: Sono; font-variation-settings: "MONO" 1; font-weight: 300; font-size: 0.85em; }
+nav { font-family: Fraunces; padding: 0 0 0 0; right: 0; background-image: url("/images/logo.svg"); background-repeat: no-repeat; background-size: 17.5rem; background-position: calc(50vw - min(800px, 90vw) / 2) 10px; height: 5rem; }
+nav ul { padding: 0; text-align: right; margin: 0.6rem calc(50vw - min(800px, 90vw) / 2) 0.5rem 0; }
+nav li { display: inline-block; margin: 0.2rem 0 0 1rem; border-bottom: solid 1px transparent; transition: ease-in-out 0.1s all; }
+nav li:hover { border-bottom: solid 0.1rem #a6013a; }
+nav li a { text-decoration: none !important; color: inherit; transition: ease-in-out 0.1s all }
+address, time { text-align: right; height: 0; }
+time { font-size: 0.7em; padding-left: 0.5em; font-weight: 500; }
+main ul, main ol { margin-left: calc(30% - 1em) }
+main, footer, header { width: min(800px, 90vw); margin: 0 auto 0; padding: 0 0 1em 0 }
+main li { padding-left: 1em; }
+main li p { margin: 0; padding: 0; }
+header img { width: 110%; margin-top: -1em; margin-left: -5%; }
+footer img { width: 110%; margin-top: 3em; margin-left: -5%; }
+footer p { font-size: 0.75em; text-align: right }
+aside { position: sticky; top: 2em; margin-bottom: -1em; padding-top: 1em; width: 30%; height: 0; }
+aside div { position: absolute; width: 12.5em; border-top: solid 0.1em black; margin-top: -1em; overflow: visible; padding: 1em 0; }
+aside ul { font-style: italic; font-size: 0.7rem; list-style-type: none; list-style-position: inside; padding-left: 0; margin: 0 0 0 0em; }
+aside ul li {line-height: 1.2em; padding: 0.5em 0 0 1em; }
+aside ul li::before { content: '▸'; position: absolute; margin-left: -1em; }
+
+@media (max-device-width: 480px), (max-width: 480px) {
+  body { text-size-adjust: 133%; }
+  nav { height: 12.5em; background-size: 60vw; background-position-y: 2em; }
+  aside { margin-left: -480px; }
+  pre { margin: 1em -1em 1em -1em; }
+  p, h1, h2, h3, h4 { padding-left: 0; }
+  main ul, main ol { margin-left: -1em }
+}
+
+@media (refers-color-scheme: dark) {
+  body { background-color: #001; color: #cccccc; }
+  h1 { color: #eee; }
+  nav { background-image: url("/images/logo.svg"); }
+  .intro { color: #ccc; }
+  b { color: #fff; }
+}
+.error { color: #cc0033; }
+.number { color: #cc3366; }
+.modifier { color: #ff9966; }
+.keyword { color: #ff6633; }
+.ident { color: #ffcc99; }
+.term { color: #ffcc33; }
+.typed { color: #00cc99; }
+.string { color: #99ffff; }
+.parens { color: #cc6699; }
+.symbol { color: #cc3366; }
