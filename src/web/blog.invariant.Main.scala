@@ -3,24 +3,16 @@ package blog.invariant
 import scala.collection.mutable.HashMap
 
 import soundness.*
-import escapade.*
-import eucalyptus.*
-import gesticulate.*
-import gossamer.*
-import hellenism.*
 import honeycomb.*
-import parasite.*
 import punctuation.*
 import scintillate.*
-import serpentine.*
-import spectacular.*
 
 import logFormats.ansiStandard
 import classloaders.scala
 import charEncoders.utf8
 import charDecoders.utf8
-import encodingMitigation.skip
-import asyncOptions.cancelOrphans
+import sanitization.skip
+import orphanDisposal.cancel
 import threadModels.platform
 import serpentine.hierarchies.simple
 import stdioSources.virtualMachine.ansi
@@ -28,7 +20,7 @@ import htmlRenderers.scalaSyntax
 
 
 given Realm = realm"invariant"
-given Message is Loggable = safely(supervise(Log(Out))).or(Log.silent)
+given Message is Loggable = safely(supervise(Log.route(Out))).or(Log.silent)
 
 given AppError is Fatal = error =>
   Out.println(error.stackTrace.teletype)

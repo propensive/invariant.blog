@@ -18,7 +18,7 @@ that catches exceptions thrown in the `main` method and prints out a stack
 trace; for a complex production system, it's not unusual for 90% of the
 codebase to be reachable only through an error handler.
 
-> “All happy paths are alike; each unhappy path is unhappy in its own way.”
+> _“All happy paths are alike; each unhappy path is unhappy in its own way.”_
 
 In this series of blogposts, I will explore the state of the art in error
 handling in Scala 3, built upon my experience of writing direct-style Scala 3
@@ -29,10 +29,10 @@ it easy to handle errors in a direct style.
 
 ## Errors
 
-### What is an error?
-
 First, let's make it clear what is meant by an _error_. The term is especially
 dependent on context.
+
+### What is an error?
 
 Some errors may seem innocuous, like reading an email address without an `@`; or
 catastrophic, like discovering the signal from a satellite in orbit has gone
