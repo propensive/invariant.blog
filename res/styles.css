@@ -39,7 +39,7 @@ footer img { width: 110%; margin-top: 3em; margin-left: -5%; }
 footer p { font-size: 0.75em; text-align: right }
 aside { position: sticky; top: 2em; margin-bottom: -1em; padding-top: 1em; width: 30%; height: 0; }
 aside div { position: absolute; width: 12.5em; border-top: solid 0.1em black; margin-top: -1em; overflow: visible; padding: 1em 0; }
-aside ul { font-style: italic; font-size: 0.7rem; list-style-type: none; list-style-position: inside; padding-left: 0; margin: 0 0 0 0em; }
+aside ul { font-size: 0.7rem; list-style-type: none; list-style-position: inside; padding-left: 0; margin: 0 0 0 0em; }
 aside ul li {line-height: 1.2em; padding: 0.5em 0 0 1em; }
 aside ul li::before { content: '▸'; position: absolute; margin-left: -1em; }
 

@@ -18,19 +18,18 @@ import serpentine.hierarchies.simple
 import stdioSources.virtualMachine.ansi
 import htmlRenderers.scalaSyntax
 
-
 given Realm = realm"invariant"
 given Message is Loggable = safely(supervise(Log.route(Out))).or(Log.silent)
 
-given AppError is Fatal = error =>
+given InitError is Fatal = error =>
   Out.println(error.stackTrace.teletype)
   ExitStatus.Fail(1)
 
-case class AppError(detail: Message) extends Error(detail)
+case class InitError(detail: Message) extends Error(detail)
 
 def menu = Map
- (t"Home" -> % / p"",
-  t"About" -> % / p"about",
+ (t"Home"    -> % / p"",
+  t"About"   -> % / p"about",
   t"Contact" -> % / p"contact")
 
 def page(side: Seq[Html[Flow]], content: Html[Flow]*): HtmlDoc =
@@ -50,19 +49,14 @@ def page(side: Seq[Html[Flow]], content: Html[Flow]*): HtmlDoc =
 
 @main
 def server(): Unit =
+  erased given ConcurrencyError is Unchecked = ###
   quash:
-    case ConcurrencyError(reason) =>
-      Out.println(m"There was a concurrency error")
-      ExitStatus.Fail(2).terminate()
-
-    case AppError(message) =>
+    case InitError(message) =>
       Out.println(message)
       ExitStatus.Fail(1).terminate()
+  .within(supervise(tcp"8080".serve[Http](handle)))
 
-  .within:
-    supervise(tcp"8080".serve[Http](handle))
-
-class Service() extends Servlet(handle)
+class Service() extends JavaServlet(handle)
 
 def notFound(path: Text): HtmlDoc = page
  (Nil,

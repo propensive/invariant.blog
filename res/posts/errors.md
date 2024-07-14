@@ -1,16 +1,19 @@
 # Effective Error Handling
 
-A crucial difference between prototype- and production-quality software is the
-way it handles errors. If a prototype hits an error at runtime, we must
-satisfy ourselves with whatever information we have (like a stack trace) to
-diagnose the problem, fix the code, inputs or environment, and try it
-again—repeating as many times as necessary.
+What is the difference between prototype- and production-quality software?
 
-But for production software, this is not acceptable: we need to present a
-reliable and informative experience for users who only have blackbox insight. So
-the equivalent of our interactive diagnosis and remedy must be included as part
-of the implementation, embedded within the code and ready to handle any
-deviation from the happy path.
+One difference is how errors are handled. A prototype can crash. And that's
+fine: though we must satisfy ourselves with whatever information we can get out
+of the crash, like a stack trace, to diagnose the problem, fix the code, inputs
+or environment, and try it again—repeating as many times as necessary.
+
+But for production software, this is not acceptable. It must keep calm and
+carry on. It must present reliable and informative experience for users who
+only have _blackbox_ insight; they don't know or care how it works.
+
+So something equivalent to our interactive process for diagnosing and fixing a
+problem must be integrated into the implementation, embedded within the code
+and ready to recover from or mitigate any deviation from the happy path.
 
 Error handling code is everything that performs the diagnosis and mitigation.
 For a prototype in Scala, it might be nothing more than the default handler
@@ -218,8 +221,7 @@ compiletime.
 
 A desirable error handling system should adhere to the following:
 
-1.
-2. Errors should be composable
+1.Errors should be composable
 
 - bias towards the happy path
 - straightforward migration path from unchecked to fully-checked code
