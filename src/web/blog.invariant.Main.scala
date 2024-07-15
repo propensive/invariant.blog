@@ -11,7 +11,7 @@ import logFormats.ansiStandard
 import classloaders.scala
 import charEncoders.utf8
 import charDecoders.utf8
-import sanitization.skip
+import textSanitizers.skip
 import orphanDisposal.cancel
 import threadModels.platform
 import serpentine.hierarchies.simple
