@@ -1,7 +1,5 @@
 package blog.invariant
 
-import scala.collection.mutable.HashMap
-
 import soundness.*
 import honeycomb.*
 import punctuation.*
@@ -10,11 +8,9 @@ import scintillate.*
 import logFormats.ansiStandard
 import classloaders.scala
 import charEncoders.utf8
-import charDecoders.utf8
-import textSanitizers.skip
 import orphanDisposal.cancel
 import threadModels.platform
-import serpentine.hierarchies.simple
+import pathHierarchies.simple
 import stdioSources.virtualMachine.ansi
 import htmlRenderers.scalaSyntax
 
@@ -58,10 +54,9 @@ def home: HtmlDoc =
   val markdown = md"""
 Welcome to my blog. Here I write about programming, primarily with
 [Scala 3](https://scala-lang.org/), but more generally in advanced statically-typed programming
-languages. This is my outlet to elaborate on the technical decisions, influences and motivations that
-contributed towards my main software projects: [Soundness](https://soundness.dev/),
-[Fury](https://github.com/propensive/fury), [Amok](https://github.com/propensive/amok) and
-[CoDL](https://github.com/propensive/codl).
+languages. This is my outlet to elaborate on the technical decisions, influences and motivations
+that contributed towards my software projects, particularly [Soundness](https://soundness.dev/),
+and [Fury](https://github.com/propensive/fury).
 
 This blog is new, so there is only one post so far; the first in a series about error handling.
   """
@@ -74,17 +69,6 @@ This blog is new, so there is only one post so far; the first in a series about 
 
 def contact: HtmlDoc =
   page(Nil, H1(t"Contact Me"), P(t"To get in touch, please email me at jon.pretty@propensive.com"))
-
-object Cache:
-  private val cache: HashMap[Text, HtmlDoc] = HashMap()
-
-  def apply(post: Text): HtmlDoc raises PathError raises ClasspathError raises MarkdownError =
-    cache.establish(post):
-      val markdown = Markdown.parse((Classpath / p"posts" / Name(t"$post.md"))())
-
-      page
-       (List(Div(htmlRenderers.outline.convert(markdown.nodes) :+ Span.fleuron(t"☙"))),
-        (Address(t"Jon Pretty,", Time(t"11 July 2024")) :: (markdown.html.to(List) :+ P.fleuron(t"❦")))*)
 
 def handle(using HttpRequest): HttpResponse[?] =
   quash:
