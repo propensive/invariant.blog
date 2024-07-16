@@ -21,4 +21,6 @@ object Cache:
 
       page
        (List(Div(htmlRenderers.outline.convert(markdown.nodes) :+ Span.fleuron(t"☙"))),
-        (Address(t"Jon Pretty,", Time(t"11 July 2024")) :: (markdown.html.to(List) :+ P.fleuron(t"❦")))*)
+        Address(t"Jon Pretty,", Time(t"15 July 2024")),
+        Div(markdown.html),
+        P.fleuron(t"❦"))

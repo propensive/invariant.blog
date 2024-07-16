@@ -8,21 +8,25 @@ import scintillate.*
 import logFormats.ansiStandard
 import classloaders.scala
 import charEncoders.utf8
+import charDecoders.utf8
 import orphanDisposal.cancel
 import threadModels.platform
 import pathHierarchies.simple
 import stdioSources.virtualMachine.ansi
 import htmlRenderers.scalaSyntax
+import textSanitizers.skip
 
 given Realm = realm"invariant"
 given Message is Loggable = safely(supervise(Log.route(Out))).or(Log.silent)
+erased given ConcurrencyError is Unchecked = ###
 
-def menu = Map
- (t"Home"    -> % / p"",
+val menu: Map[Text, SimplePath] = Map
+ (t"Home"    -> % / p"")/*,
   t"About"   -> % / p"about",
-  t"Contact" -> % / p"contact")
+  t"Contact" -> % / p"contact")*/
 
-def page(side: Seq[Html[Flow]], content: Html[Flow]*): HtmlDoc =
+
+def page(side: Seq[Html[Flow]], content: Html[Article.Content]*): HtmlDoc =
   HtmlDoc(Html
    (Head
      (Title(t"Invariant.blog"),
@@ -37,50 +41,40 @@ def page(side: Seq[Html[Flow]], content: Html[Flow]*): HtmlDoc =
        (Img(src = % / p"images" / p"panorama.webp"),
         P(t"© Copyright 2024 Jon Pretty & Propensive")))))
 
-@main
-def server(): Unit =
-  erased given ConcurrencyError is Unchecked = ###
-  supervise(tcp"8080".serve[Http](handle))
-
 class Service() extends JavaServlet(handle)
+
+@main
+def server(): Unit = supervise(tcp"8080".serve[Http](handle))
 
 def notFound(path: Text): HtmlDoc = page
  (Nil,
   H1(t"Not Found"),
   P(t"There is no page at the url ", Code(path), t"."))
-def about: HtmlDoc = page(Nil, H1(t"About"), P(t"Invariant.blog is a blog about invariance."))
 
-def home: HtmlDoc =
-  val markdown = md"""
-Welcome to my blog. Here I write about programming, primarily with
-[Scala 3](https://scala-lang.org/), but more generally in advanced statically-typed programming
-languages. This is my outlet to elaborate on the technical decisions, influences and motivations
-that contributed towards my software projects, particularly [Soundness](https://soundness.dev/),
-and [Fury](https://github.com/propensive/fury).
+def about: HtmlDoc raises ClasspathError raises MarkdownError =
+  val markdown = Markdown.parse((Classpath / p"about.md")())
+  page(Nil, Div(markdown.html))
 
-This blog is new, so there is only one post so far; the first in a series about error handling.
-  """
 
-  page
-   (Nil,
-    H2(t"A blog about programming with ", A(href = url"https://soundness.dev/")(t"Soundness")),
-    Div
-     (markdown.html*))
+def home: HtmlDoc raises ClasspathError raises MarkdownError = page
+ (Nil,
+  Div(Markdown.parse((Classpath / p"home.md")()).html),
+  Section.post
+   (Time(t"16 July 2024"),
+    H3(A(href = % / p"error-handling")(t"Effective Error Handling")),
+    P(t"""The first in a new series of blogposts introducing and exploring Soundness's approach to
+          error handling. But first, I establish a basic understanding of errors, and present a
+          manifesto of desirable qualities for systematic error handling.""")))
+
 
 def contact: HtmlDoc =
   page(Nil, H1(t"Contact Me"), P(t"To get in touch, please email me at jon.pretty@propensive.com"))
 
 def handle(using HttpRequest): HttpResponse[?] =
-  quash:
-    case MarkdownError(detail) =>
-      HttpResponse(page(Nil, H1(t"Bad markdown: $detail")))
-
-    case ClasspathError(path) =>
-      HttpResponse(page(Nil, H1(t"Path $path not found")))
-
-    case PathError(path, reason) =>
-      HttpResponse(page(Nil, P(t"$path is not valid because $reason")))
-
+  mend:
+    case MarkdownError(detail)   => HttpResponse(page(Nil, H1(t"Bad markdown: $detail")))
+    case ClasspathError(path)    => HttpResponse(page(Nil, H1(t"Path $path not found")))
+    case PathError(path, reason) => HttpResponse(page(Nil, P(t"$path is not valid: $reason")))
   .within:
     request.path match
       case %                           => HttpResponse(home)
