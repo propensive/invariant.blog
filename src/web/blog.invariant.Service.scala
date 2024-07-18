@@ -17,6 +17,7 @@ import htmlRenderers.scalaSyntax
 import textSanitizers.skip
 
 given Realm = realm"invariant"
+
 given Message is Loggable = safely(supervise(Log.route(Out))).or(Log.silent)
 erased given ConcurrencyError is Unchecked = ###
 
@@ -24,7 +25,6 @@ val menu: Map[Text, SimplePath] = Map
  (t"Home"    -> % / p"")/*,
   t"About"   -> % / p"about",
   t"Contact" -> % / p"contact")*/
-
 
 def page(side: Seq[Html[Flow]], content: Html[Article.Content]*): HtmlDoc =
   HtmlDoc(Html
@@ -41,10 +41,10 @@ def page(side: Seq[Html[Flow]], content: Html[Article.Content]*): HtmlDoc =
        (Img(src = % / p"images" / p"panorama.webp"),
         P(t"© Copyright 2024 Jon Pretty & Propensive")))))
 
-class Service() extends JavaServlet(handle)
-
 @main
 def server(): Unit = supervise(tcp"8080".serve[Http](handle))
+
+class Service() extends JavaServlet(handle)
 
 def notFound(path: Text): HtmlDoc = page
  (Nil,
@@ -55,7 +55,6 @@ def about: HtmlDoc raises ClasspathError raises MarkdownError =
   val markdown = Markdown.parse((Classpath / p"about.md")())
   page(Nil, Div(markdown.html))
 
-
 def home: HtmlDoc raises ClasspathError raises MarkdownError = page
  (Nil,
   Div(Markdown.parse((Classpath / p"home.md")()).html),
@@ -65,7 +64,6 @@ def home: HtmlDoc raises ClasspathError raises MarkdownError = page
     P(t"""The first in a new series of blogposts introducing and exploring Soundness's approach to
           error handling. But first, I establish a basic understanding of errors, and present a
           manifesto of desirable qualities for systematic error handling.""")))
-
 
 def contact: HtmlDoc =
   page(Nil, H1(t"Contact Me"), P(t"To get in touch, please email me at jon.pretty@propensive.com"))
