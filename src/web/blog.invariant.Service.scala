@@ -4,6 +4,8 @@ import soundness.*
 import honeycomb.*
 import punctuation.*
 import scintillate.*
+import aviation.{Time as _, *}
+import amok.*
 
 import logFormats.ansiStandard
 import classloaders.scala
@@ -13,13 +15,14 @@ import orphanDisposal.cancel
 import threadModels.platform
 import pathHierarchies.simple
 import stdioSources.virtualMachine.ansi
-import htmlRenderers.scalaSyntax
 import textSanitizers.skip
 
 given Realm = realm"invariant"
-
+given HtmlConverter = HtmlConverter(AmokRenderer)
 given Message is Loggable = safely(supervise(Log.route(Out))).or(Log.silent)
 erased given ConcurrencyError is Unchecked = ###
+
+// zmnqm
 
 val menu: Map[Text, SimplePath] = Map
  (t"Home"    -> % / p"")/*,
@@ -32,7 +35,8 @@ def page(side: Seq[Html[Flow]], content: Html[Article.Content]*): HtmlDoc =
      (Title(t"Invariant.blog"),
       Meta(charset = enc"UTF-8"),
       Link(rel = Rel.Stylesheet, href = % / p"styles.css"),
-      Link(rel = Rel.Icon, href = % / p"images" / p"logo.svg")),
+      Link(rel = Rel.Stylesheet, href = % / p"amok.css"),
+      Link(rel = Rel.Icon, href = % / p"images" / p"icon.webp")),
     Body
      (Nav(Ul(menu.map { (label, link) => Li(A(href = link)(label)) }.to(List))),
       Header(Img(src = % / p"images" / p"panorama2.webp")),
@@ -55,18 +59,21 @@ def about: HtmlDoc raises ClasspathError raises MarkdownError =
   val markdown = Markdown.parse((Classpath / p"about.md")())
   page(Nil, Div(markdown.html))
 
-def home: HtmlDoc raises ClasspathError raises MarkdownError = page
+case class Blogpost(path: Text, date: Date, title: Text, description: Text)
+val posts = List(t"error-handling", t"error-handling-2", t"error-handling-3", t"error-handling-4")
+
+def home: HtmlDoc raises ClasspathError raises MarkdownError raises PathError = page
  (Nil,
   Div(Markdown.parse((Classpath / p"home.md")()).html),
-  Section.post
-   (Time(t"16 July 2024"),
-    H3(A(href = % / p"error-handling")(t"Effective Error Handling")),
-    P(t"""The first in a new series of blogposts introducing and exploring Soundness's approach to
-          error handling. But first, I establish a basic understanding of errors, and present a
-          manifesto of desirable qualities for systematic error handling.""")))
+  Section.posts(posts.map(Cache.blogpost(_)).sortBy(_.date).flatMap:
+    case Blogpost(path, date, title, description) =>
+      List(H3(A(href = % / Name(path))(title)), Time(date.show), P(description))))
 
 def contact: HtmlDoc =
-  page(Nil, H1(t"Contact Me"), P(t"To get in touch, please email me at jon.pretty@propensive.com"))
+  page
+   (Nil,
+    H1(t"Contact Me"),
+    P(t"To get in touch, please email me at jon.pretty@propensive.com"))
 
 def handle(using HttpRequest): HttpResponse[?] =
   mend:
@@ -80,5 +87,6 @@ def handle(using HttpRequest): HttpResponse[?] =
       case % / p"contact"              => HttpResponse(contact)
       case % / p"images" / Name(image) => HttpResponse(Classpath / p"images" / Name(image))
       case % / p"styles.css"           => HttpResponse(Classpath / p"styles.css")
+      case % / p"amok.css"             => HttpResponse(Classpath / p"amok" / p"styles.css")
       case % / Name(post)              => HttpResponse(Cache(post))
       case _                           => HttpResponse(notFound(request.pathText))

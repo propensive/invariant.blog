@@ -1,12 +1,20 @@
+title  Effective Error Handling
+path   error-handling
+date   2024-07-16
+
+description
+    The first in a new series of blogposts introducing providing background
+    understanding to the concept of error handling.
+##
 # Effective Error Handling
 
 ## Abstract
 
-**THROUGH THIS SERIES** I will explore the state of the art in error
+**THROUGHOUT THIS SERIES** I will explore the state of the art in error
 handling in Scala 3, built upon the evolution of my own experience of writing
-_direct-style Scala 3_ for the last three years, as well as sixteen years of
+_direct-style Scala_ for the last three years, as well as sixteen years of
 Scala development before that, during which I was never fully satisfied with
-the state of error handling in Scala.
+the state of error handling.
 
 I'll present a manifesto for library support for idealized error handling, and
 show how we can get close to achieving it. I'll present a couple
@@ -400,6 +408,7 @@ without compromises.
 The rest of this series will describe the full expressivity, composibility,
 safety and power of direct-style Scala.
 
-Having set the stage, in the next post
-we will start exploring real-world error-handling in Scala 3 code with
-Soundness.
+Having set the stage, the next post will present a manifesto that encapsulates
+our error-handling needs.
+
+- Read [Part 2: The Error Management Manifesto](/error-handling-2)
