@@ -1,10 +1,10 @@
 package blog.invariant
 
-import soundness.*
+import soundness.{Link as _, *}
 import honeycomb.*
 import punctuation.*
 import scintillate.*
-import aviation.{Time as _, *}
+import aviation.*
 import amok.*
 
 import logFormats.ansiStandard
@@ -21,8 +21,6 @@ given Realm = realm"invariant"
 given HtmlConverter = HtmlConverter(AmokRenderer)
 given Message is Loggable = safely(supervise(Log.route(Out))).or(Log.silent)
 erased given ConcurrencyError is Unchecked = ###
-
-// zmnqm
 
 val menu: Map[Text, SimplePath] = Map
  (t"Home"    -> % / p"")/*,
