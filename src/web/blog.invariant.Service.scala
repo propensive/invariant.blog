@@ -1,8 +1,8 @@
 package blog.invariant
 
-import soundness.{Link as _, *}
+import soundness.{/ as _, *}
+import serpentine./
 import honeycomb.*
-import punctuation.*
 import scintillate.*
 import aviation.*
 import amok.*
@@ -73,7 +73,7 @@ def contact: HtmlDoc =
     H1(t"Contact Me"),
     P(t"To get in touch, please email me at jon.pretty@propensive.com"))
 
-def handle(using HttpRequest): HttpResponse[?] =
+def handle(using HttpRequest): HttpResponse =
   mend:
     case MarkdownError(detail)   => HttpResponse(page(Nil, H1(t"Bad markdown: $detail")))
     case ClasspathError(path)    => HttpResponse(page(Nil, H1(t"Path $path not found")))

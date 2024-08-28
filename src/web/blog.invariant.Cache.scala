@@ -4,7 +4,6 @@ import scala.collection.mutable.HashMap
 
 import soundness.*
 import honeycomb.*
-import punctuation.*
 import cellulose.*
 import aviation.*
 import contingency.AggregateError
